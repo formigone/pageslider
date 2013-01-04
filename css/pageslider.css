@@ -1,0 +1,30 @@
+#pageSliderWidget {
+	background: #ddd;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	border: 0;
+	width: 100%;
+}
+
+#pageSlider {
+	margin: 0;
+	padding: 0;
+	height: 400px;
+	position: relative;
+	left: 0;
+}
+
+.pageSliderPanel {
+	width: 100%;
+	background: #fff;
+	border: 1px solid #aaa;
+	padding: 20px;
+	margin: 10px 20px;
+	float: left;
+}
+
+.pageSliderMiniPanel {
+	height: 0px;
+	overflow: hidden;
+}
