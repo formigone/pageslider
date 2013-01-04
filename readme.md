@@ -15,36 +15,32 @@ How to
 
 After including the Javascript file, and some CSS to make things look right, set up your document with the following structure:
 
-'''html
-   <div id="pageSliderWidget">
-      <div id="pageSlider">
-         <div class="pageSliderPanel" id="panel_num_1">
-            <button data-intent="scroll-previous">&laquo;</button>
-            <button data-intent="scroll-next">&raquo;</button>
-         </div>
-         <div class="pageSliderPanel" id="panel_num_2">
-            <button data-intent="scroll-previous">&laquo;</button>
-            <button data-intent="scroll-next">&raquo;</button>
-         </div>
-         <div class="pageSliderPanel" id="panel_num_3">
-            <button data-intent="scroll-previous">&laquo;</button>
-            <button data-intent="scroll-next">&raquo;</button>
-         </div>
-      </div>
-   </div>
-'''
+    <div id="pageSliderWidget">
+       <div id="pageSlider">
+          <div class="pageSliderPanel" id="panel_num_1">
+             <button data-intent="scroll-previous">&laquo;</button>
+             <button data-intent="scroll-next">&raquo;</button>
+          </div>
+          <div class="pageSliderPanel" id="panel_num_2">
+             <button data-intent="scroll-previous">&laquo;</button>
+             <button data-intent="scroll-next">&raquo;</button>
+          </div>
+          <div class="pageSliderPanel" id="panel_num_3">
+             <button data-intent="scroll-previous">&laquo;</button>
+             <button data-intent="scroll-next">&raquo;</button>
+          </div>
+       </div>
+    </div>
 
 Inside each panel you'll need a way to navigate through the pages. Right now this is done with the <button> elements with the special data-intent of scroll-next and scroll-previous.
 
 To set the Javascript plugin in action, simply create an instance of the PageSlider class, tell it what needs to behave as a sliding page, and you're done!
 
-'''javascript
-   $(function(){
-      var slider = new PageSlider($("#pageSlider"));
-      $(window).bind("hashchange", slider.gotoHash);
-      slider.run();
-   });
-'''
+    $(function(){
+       var slider = new PageSlider($("#pageSlider"));
+       $(window).bind("hashchange", slider.gotoHash);
+       slider.run();
+    });
 
 *
 -
