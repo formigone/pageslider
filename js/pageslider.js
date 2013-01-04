@@ -16,32 +16,53 @@ var PageSlider = function(sliderEl) {
 	// Element ID that identifies a panel, excluding its integer value
 	var panelIndexName = "panel_num_";
 
-	$(panelStyleName).outerWidth(width - margin);
+	// --------------------------------------------------------
+	//
+	// --------------------------------------------------------
+	function adjustPanelDimensions() {
+		$(panelStyleName).outerWidth(width - margin);
+		$(slider).innerWidth(($(panels[0]).outerWidth() + margin) * panels.length);
+	}
 
-	$(slider).innerWidth(($(panels[0]).outerWidth() + margin) * panels.length);
+	// --------------------------------------------------------
+	//
+	// --------------------------------------------------------
+	function scrollPanel(e) {
+		e.preventDefault();
 
-	function scrollPanel() {
-	
 		var target = $(this).parents(panelStyleName).next();
-	
+		
 		if ($(this).attr("data-intent") == "scroll-previous")
-			target = $(this).parents(panelStyleName).prev();
+			target = $(this).parents(panelStyleName).prev(panelStyleName);
+
+		// In case the next panel is nested inside some other element instead of being a direct sibling
+		else if (target[0].id.indexOf(panelIndexName) < 0)
+			target = $(this).parents(panelStyleName).next().find(panelStyleName).first();
 
 		if ($(target)[0] != undefined)
 			updateHash(target);
 	}
 	
+	// --------------------------------------------------------
+	//
+	// --------------------------------------------------------
 	function fixHeight(target) {
-		$(panelStyleName).addClass(miniPanelStyleName);
-		$(target).removeClass(miniPanelStyleName);
+//		$(panelStyleName).addClass(miniPanelStyleName);
+//		$(target).removeClass(miniPanelStyleName);
 	}
 
+	// --------------------------------------------------------
+	//
+	// --------------------------------------------------------
 	function updateHash(target) {
 		var id = $(target).attr("id").replace(panelIndexName, "");
 		window.location.hash = "#page_" + id;
 		goto(target);
 	}
 
+	// --------------------------------------------------------
+	//
+	// --------------------------------------------------------
 	function goto(target, speed) {
 		if (speed == null)
 			speed = scrollDelay;
@@ -50,6 +71,9 @@ var PageSlider = function(sliderEl) {
 		$(slider).animate({"left": -($(target).position().left)}, speed);
 	}
 
+	// --------------------------------------------------------
+	//
+	// --------------------------------------------------------
 	this.gotoHash = function(speed) {
 		if (speed == null)
 			speed = scrollDelay;
@@ -66,17 +90,28 @@ var PageSlider = function(sliderEl) {
 		}
 	};
 
+	// --------------------------------------------------------
+	//
+	// --------------------------------------------------------
 	this.setScrollDelay = function(delay) {
 		scrollDelay = delay;
 	};
 
+	// --------------------------------------------------------
+	//
+	// --------------------------------------------------------
 	this.setPanelName = function(indexName) {
 		panelIndexName = indexName;
 	};
 
+	// --------------------------------------------------------
+	//
+	// --------------------------------------------------------
 	this.run = function() {
 		this.gotoHash(0);
 	};
 
 	$("*[data-intent='scroll-next'], *[data-intent='scroll-previous']").live("click", scrollPanel);
+	adjustPanelDimensions();
 };
+
