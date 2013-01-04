@@ -22,10 +22,10 @@ var PageSlider = function(sliderEl) {
 
 	function scrollPanel() {
 	
-		var target = $(this).parent(panelStyleName).next();
+		var target = $(this).parents(panelStyleName).next();
 	
 		if ($(this).attr("data-intent") == "scroll-previous")
-			target = $(this).parent(panelStyleName).prev();
+			target = $(this).parents(panelStyleName).prev();
 
 		if ($(target)[0] != undefined)
 			updateHash(target);
@@ -78,5 +78,5 @@ var PageSlider = function(sliderEl) {
 		this.gotoHash(0);
 	};
 
-	$("button[data-intent='scroll-next'], button[data-intent='scroll-previous']").live("click", scrollPanel);
+	$("*[data-intent='scroll-next'], *[data-intent='scroll-previous']").live("click", scrollPanel);
 };
