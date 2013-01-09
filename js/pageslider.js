@@ -7,8 +7,6 @@
 var PageSlider = function(sliderEl) {
 	var slider = sliderEl;
 	var panels = $(".pageSliderPanel");
-	var width = $(slider).innerWidth();
-	var margin = parseInt($(".pageSliderPanel").css("marginLeft")) + parseInt($(".pageSliderPanel").css("marginRight"));
 	var scrollDelay = 250;
 	var panelStyleName = ".pageSliderPanel";
 	var miniPanelStyleName = "pageSliderMiniPanel";
@@ -16,12 +14,18 @@ var PageSlider = function(sliderEl) {
 	// Element ID that identifies a panel, excluding its integer value
 	var panelIndexName = "panel_num_";
 
+	$(window).bind("hashchange", gotoHash);
+	$(window).bind("resize", normalizePanels);
 	// --------------------------------------------------------
 	//
 	// --------------------------------------------------------
-	function adjustPanelDimensions() {
-		$(panelStyleName).outerWidth(width - margin);
+	function normalizePanels() {
+		var margin = parseInt($(".pageSliderPanel").css("marginRight")) + parseInt($(".pageSliderPanel").css("marginLeft"));
+		$(".pageSliderPanel").outerWidth($(window).outerWidth(true) - margin);
 		$(slider).innerWidth(($(panels[0]).outerWidth() + margin) * panels.length);
+		setTimeout(function() {
+			gotoHash(0);
+		}, 10);
 	}
 
 	// --------------------------------------------------------
@@ -31,24 +35,15 @@ var PageSlider = function(sliderEl) {
 		e.preventDefault();
 
 		var target = $(this).parents(panelStyleName).next();
-		
 		if ($(this).attr("data-intent") == "scroll-previous")
 			target = $(this).parents(panelStyleName).prev(panelStyleName);
 
 		// In case the next panel is nested inside some other element instead of being a direct sibling
-		else if (target[0].id.indexOf(panelIndexName) < 0)
+		else if ($(target[0]).attr("id").indexOf(panelIndexName) < 0)
 			target = $(this).parents(panelStyleName).next().find(panelStyleName).first();
 
 		if ($(target)[0] != undefined)
 			updateHash(target);
-	}
-	
-	// --------------------------------------------------------
-	//
-	// --------------------------------------------------------
-	function fixHeight(target) {
-//		$(panelStyleName).addClass(miniPanelStyleName);
-//		$(target).removeClass(miniPanelStyleName);
 	}
 
 	// --------------------------------------------------------
@@ -67,14 +62,13 @@ var PageSlider = function(sliderEl) {
 		if (speed == null)
 			speed = scrollDelay;
 
-		fixHeight(target);
 		$(slider).animate({"left": -($(target).position().left)}, speed);
 	}
 
 	// --------------------------------------------------------
 	//
 	// --------------------------------------------------------
-	this.gotoHash = function(speed) {
+	function gotoHash (speed) {
 		if (speed == null)
 			speed = scrollDelay;
 
@@ -103,15 +97,29 @@ var PageSlider = function(sliderEl) {
 	this.setPanelName = function(indexName) {
 		panelIndexName = indexName;
 	};
+	
+	// --------------------------------------------------------
+	//
+	// --------------------------------------------------------
+	this.getPanelName = function() {
+		return panelIndexName;
+	};
+	
+	// --------------------------------------------------------
+	//
+	// --------------------------------------------------------
+	this.goto = function(pageNum) {
+		window.location.hash = "#page_" + pageNum;
+	};
 
 	// --------------------------------------------------------
 	//
 	// --------------------------------------------------------
 	this.run = function() {
-		this.gotoHash(0);
+		normalizePanels();
+		gotoHash(0);
 	};
-
+	
 	$("*[data-intent='scroll-next'], *[data-intent='scroll-previous']").live("click", scrollPanel);
-	adjustPanelDimensions();
 };
 
